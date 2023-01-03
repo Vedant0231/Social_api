@@ -18,4 +18,4 @@ class Useradmin(admin.ModelAdmin):
 """admin side view for like table"""
 @admin.register(Likemodel)
 class Useradmin(admin.ModelAdmin):
-    filelds = ['resp_id','post_id','like','updated_at']    
+    filelds = ['resp_id','post_id','user_id','like','updated_at']    
