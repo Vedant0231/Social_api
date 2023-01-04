@@ -80,11 +80,11 @@ WSGI_APPLICATION = 'project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'socialmedia',
-        'USER': 'postgres',
-        'PASSWORD': 'vedant',
-        'HOST': '127.0.0.1',
-        'PORT': '5432',
+        'NAME': [DB_NAME],
+        'USER': [DB_USERNAME],
+        'PASSWORD': [DB_PASSWORD],
+        'HOST': [DB_HOST],
+        'PORT': [DB_PORT],
     }
 }
 
