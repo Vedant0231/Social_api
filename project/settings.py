@@ -30,6 +30,7 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
+"""Install rest_framework and api here. Rest_framework because we are using rest framework and api because our app's name is api."""
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -75,10 +76,11 @@ WSGI_APPLICATION = 'project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
+"""Postgresql database connection."""
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'mediaapi',
+        'NAME': 'socialmedia',
         'USER': 'postgres',
         'PASSWORD': 'vedant',
         'HOST': '127.0.0.1',

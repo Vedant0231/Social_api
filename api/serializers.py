@@ -1,16 +1,18 @@
 from rest_framework import serializers
 from .models import Usermodel, Postmodel, Likemodel
-
+import json
 
 """user serializer"""
 class Userserializer(serializers.ModelSerializer):
 
-    post = serializers.SlugRelatedField(many=True, read_only= True, slug_field="text")
+
+    post = serializers.SlugRelatedField(many=True, read_only= True, slug_field="text")    #by this slug related field we get user's post.
     
     class Meta:
 
+
         model = Usermodel
-        fields = ["id", "username", "post"]
+        fields = ["id", "username", "post"]    #this post is get by slug related field and this post field is not present in Usermodel
         
 
     """create function create to post data"""
@@ -33,17 +35,21 @@ class Userserializer(serializers.ModelSerializer):
 """post serializer"""
 class Postserializer(serializers.ModelSerializer):
 
-    like_count = serializers.SerializerMethodField() #by serializer method field we can use like_count function and add that data in like_count firld.
-    post_by = serializers.CharField(source = 'user_id.username')
-  
+
+    like_count = serializers.SerializerMethodField()    #by serializer method field we can use like_count function and add that data in like_count firld.
+    post_by = serializers.CharField(source = 'user_id.username')    #to get username who create post.
+    liked_by = serializers.SerializerMethodField()    #to get user who like the post
+    
+
     class Meta:
 
+
         model = Postmodel
-        fields = ["post_id", "text", "post_by", "user_id", "like_count","liked_by"]
+        fields = ["post_id", "text", "post_by", "user_id", "like_count", "liked_by"]
 
 
     """like count function"""
-    def get_like_count(self,id):  #this function will count like on a post with the help of post_id.
+    def get_like_count(self,id):    #this function will count like on a post with the help of post_id.
         
         postid = id
         like_count = Likemodel.objects.filter(post_id = postid ).count()
@@ -51,13 +57,13 @@ class Postserializer(serializers.ModelSerializer):
         return like_count
 
 
-    """function for display object how like the post"""
-    def get_userobj(self,id):
+    """function to get liked by"""
+    def get_liked_by(self, id):
 
-        userid = id
-        userobj = Postmodel.objects.filter(user_id = userid).first
-        return userobj
+        users = Likemodel.objects.filter(post_id = id)
+        users = Likeminiserializer(users, many = True)
 
+        return users.data
 
     """create function create to post data"""
     def create(self, validation_data):
@@ -81,9 +87,9 @@ class Postserializer(serializers.ModelSerializer):
 class Likeserializer(serializers.ModelSerializer):
 
 
-  
     class Meta:
   
+
         model = Likemodel
         fields = ["resp_id","post_id","user_id","like" ]
 
@@ -105,3 +111,17 @@ class Likeserializer(serializers.ModelSerializer):
         instance.save()
 
         return instance
+
+
+"""like serializer to display with post """
+class Likeminiserializer(serializers.ModelSerializer):
+    
+
+    user_id = Userserializer()
+
+
+    class Meta:
+
+
+        model = Likemodel
+        fields = ["resp_id",  "user_id"]
